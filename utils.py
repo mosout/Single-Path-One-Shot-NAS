@@ -3,11 +3,11 @@ import os
 import random
 import time
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
-import torchvision.transforms as transforms
+import flowvision.transforms as transforms
 
 
 class AverageMeter(object):
@@ -115,12 +115,12 @@ def random_choice(num_choice, layers):
     return list(np.random.randint(num_choice, size=layers))
 
 
-def plot_hist(acc_list, min=0, max=101, interval=5, name='search'):
-    plt.hist(acc_list, bins=max - min, range=(min, max), histtype='bar')
-    plt.xticks(np.arange(min, max, interval))
-    img_path = name + '.png'
-    plt.savefig(img_path)
-    plt.show()
+# def plot_hist(acc_list, min=0, max=101, interval=5, name='search'):
+#     plt.hist(acc_list, bins=max - min, range=(min, max), histtype='bar')
+#     plt.xticks(np.arange(min, max, interval))
+#     img_path = name + '.png'
+#     plt.savefig(img_path)
+#     plt.show()
 
 
 def set_seed(seed):

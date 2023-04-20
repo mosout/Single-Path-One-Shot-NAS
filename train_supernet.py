@@ -6,8 +6,8 @@ import time
 
 import torch
 import torch.nn as nn
-import torchvision
-from torchvision import datasets
+import flowvision as torchvision
+from flowvision import datasets
 
 import utils
 from models.model import SinglePath_OneShot
@@ -37,6 +37,7 @@ parser.add_argument('--auto_aug', action='store_true', default=False, help='use 
 parser.add_argument('--resize', action='store_true', default=False, help='use resize')
 args = parser.parse_args()
 args.device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+# args.device = torch.device('cuda+remat') if torch.cuda.is_available() else torch.device('cpu')
 log_format = '%(asctime)s %(message)s'
 logging.basicConfig(stream=sys.stdout, level=logging.INFO,
                     format=log_format, datefmt='%m/%d %I:%M:%S %p')
@@ -118,7 +119,7 @@ def main():
 
     # Define Supernet
     model = SinglePath_OneShot(args.dataset, args.resize, args.classes, args.layers)
-    logging.info(model)
+    # logging.info(model)
     model = model.to(args.device)
     criterion = nn.CrossEntropyLoss().to(args.device)
     optimizer = torch.optim.SGD(model.parameters(), args.learning_rate, args.momentum, args.weight_decay)
@@ -155,4 +156,6 @@ def main():
 
 
 if __name__ == '__main__':
+    # torch.remat.set_budget("15000MB")
+    # torch.remat.set_small_pieces_optimization(False)
     main()
