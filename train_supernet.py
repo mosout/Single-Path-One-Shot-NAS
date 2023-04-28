@@ -18,7 +18,7 @@ parser.add_argument('--exp_name', type=str, default='spos_c10_train_supernet', h
 parser.add_argument('--layers', type=int, default=20, help='batch size')
 parser.add_argument('--num_choices', type=int, default=4, help='number choices per layer')
 # Training Settings
-parser.add_argument('--batch_size', type=int, default=96, help='batch size')
+parser.add_argument('--batch_size', type=int, default=256, help='batch size')
 parser.add_argument('--epochs', type=int, default=600, help='batch size')
 parser.add_argument('--learning_rate', type=float, default=0.025, help='initial learning rate')
 parser.add_argument('--momentum', type=float, default=0.9, help='momentum')
@@ -36,8 +36,8 @@ parser.add_argument('--cutout_length', type=int, default=16, help='cutout length
 parser.add_argument('--auto_aug', action='store_true', default=False, help='use auto augmentation')
 parser.add_argument('--resize', action='store_true', default=False, help='use resize')
 args = parser.parse_args()
-args.device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-# args.device = torch.device('cuda+remat') if torch.cuda.is_available() else torch.device('cpu')
+# args.device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+args.device = torch.device('cuda+remat') if torch.cuda.is_available() else torch.device('cpu')
 log_format = '%(asctime)s %(message)s'
 logging.basicConfig(stream=sys.stdout, level=logging.INFO,
                     format=log_format, datefmt='%m/%d %I:%M:%S %p')
@@ -102,11 +102,11 @@ def main():
         trainset = torchvision.datasets.CIFAR10(root=os.path.join(args.data_root, args.dataset), train=True,
                                                 download=True, transform=train_transform)
         train_loader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size,
-                                                   shuffle=True, pin_memory=True, num_workers=8)
+                                                   shuffle=True, pin_memory=True, num_workers=0)
         valset = torchvision.datasets.CIFAR10(root=os.path.join(args.data_root, args.dataset), train=False,
                                               download=True, transform=valid_transform)
         val_loader = torch.utils.data.DataLoader(valset, batch_size=args.batch_size,
-                                                 shuffle=False, pin_memory=True, num_workers=8)
+                                                 shuffle=False, pin_memory=True, num_workers=0)
     elif args.dataset == 'imagenet':
         train_data_set = datasets.ImageNet(os.path.join(args.data_root, args.dataset, 'train'), train_transform)
         val_data_set = datasets.ImageNet(os.path.join(args.data_root, args.dataset, 'valid'), valid_transform)
@@ -156,6 +156,6 @@ def main():
 
 
 if __name__ == '__main__':
-    # torch.remat.set_budget("15000MB")
-    # torch.remat.set_small_pieces_optimization(False)
+    torch.remat.set_budget("15000MB")
+    torch.remat.set_small_pieces_optimization(False)
     main()

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -ux
+
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+
+MODEL_NAME=nas
+THRESHOLD=2000
+ITERS=30
+DO_PROFILE=0
+DATASET_DIR=./time_dataset
+BS=256
+
+ENABLE_PROFILE_FOR_DTR=${DO_PROFILE} ONEFLOW_VM_MULTI_THREAD=0 ONEFLOW_DTR_OP_TIME_DATASET=${DATASET_DIR}/${MODEL_NAME}_op_time_${BS}.json ONEFLOW_DTR_GROUP_NUM=2 python3 -u $SCRIPT_DIR/dtr_run_supernet.py $THRESHOLD $BS $ITERS

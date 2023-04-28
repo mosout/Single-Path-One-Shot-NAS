@@ -2,3 +2,5 @@
 checkpoints
 log
 dataset
+.vscode
+logdir
