@@ -5,7 +5,7 @@ if [ ! -d "./logdir" ]; then
 fi
 
 LogName=log_spos_c10_train_supernet
-CUDA_VISIBLE_DEVICES=0 nohup python -u train_supernet.py > logdir/${LogName} 2>&1 &
+CUDA_VISIBLE_DEVICES=0 ONEFLOW_VM_MULTI_THREAD=0 python -u train_supernet.py > logdir/${LogName} 2>&1 &
 
 sleep 3s
 
